@@ -1,17 +1,24 @@
-﻿@model List<Category>
+﻿@model List<Category> // low charater
+@* containing element to wrap site contents*@
 <div class="container">
+    @*pt = padding top,Row = Container for responsive columns*@
     <div class="row pt-4">
+        @*Responsive grid (span 1-12 column).*@
         <div class="col-6">
+            @*Blue text color*@
             <h2 class="text-primary">Category List</h2>
         </div>
+        @*Responsive grid (span 1-12 column).*@
         <div class="col-6 text-end">
-            <a asp-controller="" asp-action="" class="=btn">
+            @*Change page*@
+            <a asp-controller="Category" asp-action="Create" class="=btn">
                 <i class="bi bi-plus-circle"></i> Create Category
             </a>
         </div>
     </div>
 </div>
 
+@*Adds basic styling to a table https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_table_basic&stacked=h*@
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -20,6 +27,9 @@
             </th>
             <th>
                 Display Order
+            </th>
+            <th>
+                
             </th>
         </tr>
     </thead>
@@ -30,6 +40,20 @@
             <tr>
                 <td>@obj.Name</td>
                 <td>@obj.DisplayOrder</td>
+                <td>
+                    <div class="btn-group">
+                        @*asp-route-id return id*@ @*mx-# Responsive left and right margin auto (horizontal) classes.
+                        * can be sm, md, lg or xl. # can be a number between 0 and 5*@
+                        @*asp-route-id return id  and id is name in method*@ @*pass id through a link below*@
+                        <a asp-controller="Category" asp-action="Update" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                            <i class="bi bi-pencil-square"></i> Update
+                        </a>
+
+                        <a asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                            <i class="bi bi-trash3"></i> Delete
+                        </a>
+                    </div>
+                </td>
             </tr>
         }
     </tbody>
