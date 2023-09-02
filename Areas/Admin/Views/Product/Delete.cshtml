@@ -1,0 +1,64 @@
+﻿@model Product
+<form method="post">
+    @*Margin Top Utilities*@
+    <div class="border p-3 mt-4">
+        @*Padding Bottom Utilities*@
+        <div class="row pb-2">
+            <h2 class="text-primary">Delete Product</h2>
+            </hr>
+        </div>
+
+        @*Responsive bottom margin classes. * can be sm, md, lg or xl. # can be a number between 0 and 5*@
+        <div class="mb-3">
+            <label> Product Title</label>
+            <input asp-for="Title" disabled class="form-control"> @*full width*@
+        </div>
+
+        <div class="mb-3">
+            <label> Product Description</label>
+            <input asp-for="Description" disabled class="form-control"> @*full width*@
+        </div>
+
+        <div class="mb-3">
+            <label> Product ISBN</label>
+            <input asp-for="ISBN" disabled class="form-control"> @*full width*@
+        </div>
+
+        <div class="mb-3">
+            <label> Product Author</label>
+            <input asp-for="Author" disabled class="form-control"> @*full width*@
+        </div>
+
+        <div class="mb-3">
+            <label> Product List Price</label>
+            <input asp-for="ListPrice" disabled class="form-control"> @*full width*@
+        </div>
+
+        <div class="mb-3">
+            <label> Product Price 1-49</label>
+            <input asp-for="Price" disabled class="form-control"> @*full width*@
+        </div>
+
+        <div class="mb-3">
+            <label> Product Price 50-99</label>
+            <input asp-for="Price50" disabled class="form-control"> @*fullwidth*@
+        </div>
+
+        <div class="mb-3">
+            <label> Product Price 100+</label>
+            <input asp-for="Price100" disabled class="form-control"> @*full width*@
+        </div>
+
+        <div class="row">
+            <div class="col-6 col-md-3">
+                <button type="submit" class="btn btn-primary form-control">Delete</button>
+            </div>
+
+            <div class="col-6 col-md-3">
+                <a asp-controller="Product" asp-action="Index" class="btn btn-secondary form-control">
+                    Back to list
+                </a>
+            </div>
+        </div>
+    </div>
+</form>
