@@ -1,0 +1,54 @@
+﻿@model List<Product> // low charater
+@* containing element to wrap site contents*@
+<div class="container">
+    @*pt = padding top,Row = Container for responsive columns*@
+    <div class="row pt-4">
+        @*Responsive grid (span 1-12 column).*@
+        <div class="col-6">
+            @*Blue text color*@
+            <h2 class="text-primary">Product List</h2>
+        </div>
+        @*Responsive grid (span 1-12 column).*@
+        <div class="col-6 text-end">
+            @*Change page*@
+            <a asp-controller="Product" asp-action="Create" class="=btn">
+                <i class="bi bi-plus-circle"></i> Create Product
+            </a>
+        </div>
+    </div>
+</div>
+
+@*Adds basic styling to a table https://www.w3schools.com/bootstrap/tryit.asp?filename=trybs_table_basic&stacked=h*@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th> 
+            <th>
+                ISBN
+            </th> 
+            <th>
+                Author
+            </th>
+            <th>
+                List Price
+            </th>
+            <th>
+                Price 1-49
+            </th>
+            <th>
+                Price 50-99
+            </th>
+            <th>
+                Price 100+
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+    </tbody>
+</table>
