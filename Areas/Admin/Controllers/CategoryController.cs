@@ -1,22 +1,22 @@
-﻿using BookShopWeb.DataAccess.Data;
+﻿using BookShopWeb.DataAccess.Repositories;
 using BookShopWeb.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
-namespace BookShopWeb.Controllers
+namespace BookShopWeb.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public CategoryController(ApplicationDbContext context)
+        public CategoryController(ICategoryRepository categoryRepository)
         {
-            _context = context;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _categoryRepository.GetAllAsync();
             return View(categories);
         }
         //View phải trùng với tên action method
@@ -30,8 +30,7 @@ namespace BookShopWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _context.AddAsync(create);
-                await _context.SaveChangesAsync();
+                _categoryRepository.Add(create);
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -43,7 +42,7 @@ namespace BookShopWeb.Controllers
             {
                 return NotFound();
             }
-            var category = await _context.Categories.FindAsync(id); //C1
+            var category = await _categoryRepository.GetByIdAsync(id); //C1
             //var category2 = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id); //C2
             //var category3 = await _context.Categories.Where(x => x.Id == id).FirstOrDefaultAsync(); //C3
             if (category == null)
@@ -58,8 +57,7 @@ namespace BookShopWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Categories.Update(category);
-                await _context.SaveChangesAsync();
+                _categoryRepository.Update(category);
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -71,9 +69,7 @@ namespace BookShopWeb.Controllers
             {
                 return NotFound();
             }
-            var category = await _context.Categories.FindAsync(id); //C1
-            //var category2 = await _context.Categories.FirstOrDefaultAsync(x => x.Id == id); //C2
-            //var category3 = await _context.Categories.Where(x => x.Id == id).FirstOrDefaultAsync(); //C3
+            var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -84,13 +80,12 @@ namespace BookShopWeb.Controllers
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeletePOST(Guid id)
         {
-            var category = await _context.Categories.FindAsync(id);
+            var category = await _categoryRepository.GetByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
             }
-            _context.Categories.Remove(category);
-            await _context.SaveChangesAsync();
+            _categoryRepository.Delete(category);
             return RedirectToAction("Index", "Category");
         }
     }
