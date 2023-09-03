@@ -1,6 +1,7 @@
 ﻿using BookShopWeb.DataAccess.Repositories;
 using BookShopWeb.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BookShopWeb.Areas.Admin.Controllers
 {
@@ -8,10 +9,13 @@ namespace BookShopWeb.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductController(IProductRepository productRepository
+            , ICategoryRepository categoryRepository)
         {
             _productRepository = productRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -22,6 +26,15 @@ namespace BookShopWeb.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
+            IEnumerable<SelectListItem> categories =
+                (await _categoryRepository.GetAllAsync())
+                .Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                });
+            //Key is Categories and value is categories
+            ViewBag.Categories = categories;
             return View();
         }
 
@@ -33,6 +46,15 @@ namespace BookShopWeb.Areas.Admin.Controllers
                 _productRepository.Add(product);
                 return RedirectToAction("Index", "Product");
             }
+            IEnumerable<SelectListItem> categories =
+                (await _categoryRepository.GetAllAsync())
+                .Select(x => new SelectListItem()
+                {
+                    Text = x.Name,
+                    Value = x.Id.ToString()
+                });
+            //Key is Categories and value is categories
+            ViewBag.Categories = categories;
             return View();
         }
         public async Task<IActionResult> Update(Guid id)
