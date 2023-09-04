@@ -11,12 +11,15 @@ namespace BookShopWeb.Areas.Admin.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ProductController(IProductRepository productRepository
-            , ICategoryRepository categoryRepository)
+        public ProductController(IProductRepository productRepository,
+            ICategoryRepository categoryRepository,
+            IWebHostEnvironment webHostEnvironment)
         {
             _productRepository = productRepository;
             _categoryRepository = categoryRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index()
@@ -25,8 +28,10 @@ namespace BookShopWeb.Areas.Admin.Controllers
             return View(products);
         }
 
-        public async Task<IActionResult> Create()
+        public async Task<IActionResult> CreateOrUpdate(Guid? id)
         {
+            //Key is Categories and value is categories
+            //ViewBag.Categories = categories;
             var productVM = new ProductVM()
             {
                 Categories =
@@ -38,22 +43,71 @@ namespace BookShopWeb.Areas.Admin.Controllers
                 }),
                 Product = new Product()
             };
+            if (id == null || id == Guid.Empty)
+            {
+                //create
 
-            //Key is Categories and value is categories
-            //ViewBag.Categories = categories;
-            return View(productVM);
+                return View(productVM);
+            }
+            else
+            {
+                //update
+
+                var product = await _productRepository.GetByIdAsync(id);
+                if (product == null)
+                {
+                    return NotFound();
+                }
+                productVM.Product = product;
+                return View(productVM);
+            }
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ProductVM productVM)
+        public async Task<IActionResult> CreateOrUpdate(ProductVM productVM, IFormFile? file)
         {
             ModelState.Remove("Product.Category");
             ModelState.Remove("Product.ImageUrl");
             ModelState.Remove("Categories");
             if (ModelState.IsValid)
             {
-                _productRepository.Add(productVM.Product);
-                return RedirectToAction("Index", "Product");
+                //take root folder which is wwwRootFolder 
+                string wwwRootPath = _webHostEnvironment.WebRootPath; //using DI provide by Dotnet
+                if (file != null)
+                {
+                    //take extension name file
+                    string extensionFile = Path.GetExtension(file.FileName);
+
+                    //create name file
+                    string fileName = Guid.NewGuid().ToString() + extensionFile;
+
+                    //navigate to the product path
+                    //go inside product folder
+                    string productPath = Path.Combine(wwwRootPath, @"images\product");
+
+                    //Save into product folder
+                    using (var fileStream = new FileStream
+                        (/*ultimate location*/Path.Combine(productPath, fileName),
+                        /*Bc create new file so =>*/FileMode.Create))
+                    {
+                        //Copies the contents of the uploaded file to the target stream.
+                        file.CopyTo(fileStream);
+                    }
+
+                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
+                }
+                //Create
+                if (productVM.Product.Id == null || productVM.Product.Id == Guid.Empty)
+                {
+                    await _productRepository.AddAsync(productVM.Product);
+                    return RedirectToAction("Index", "Product");
+                }
+                //Update
+                else
+                {
+                    await _productRepository.UpdateAsync(productVM.Product);
+                    return RedirectToAction("Index", "Product");
+                }
             }
             productVM.Categories =
                 (await _categoryRepository.GetAllAsync())
@@ -62,33 +116,7 @@ namespace BookShopWeb.Areas.Admin.Controllers
                     Text = x.Name,
                     Value = x.Id.ToString()
                 });
-            //Key is Categories and value is categories
-            //ViewBag.Categories = categories;
             return View(productVM);
-        }
-        public async Task<IActionResult> Update(Guid id)
-        {
-            if (id == null || id == Guid.Empty)
-            {
-                return NotFound();
-            }
-            var product = await _productRepository.GetByIdAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Update(Product product)
-        {
-            if (ModelState.IsValid)
-            {
-                _productRepository.Update(product);
-                return RedirectToAction("Index", "Product");
-            }
-            return View();
         }
 
         public async Task<IActionResult> Delete(Guid id)
@@ -108,7 +136,7 @@ namespace BookShopWeb.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(Product product)
         {
-            _productRepository.Delete(product);
+            await _productRepository.DeleteAsync(product);
             return RedirectToAction("Index", "Product");
         }
     }

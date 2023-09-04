@@ -30,7 +30,7 @@ namespace BookShopWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryRepository.Add(create);
+                await _categoryRepository.AddAsync(create);
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -57,7 +57,7 @@ namespace BookShopWeb.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                _categoryRepository.Update(category);
+                await _categoryRepository.UpdateAsync(category);
                 return RedirectToAction("Index", "Category");
             }
             return View();
@@ -85,7 +85,7 @@ namespace BookShopWeb.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            _categoryRepository.Delete(category);
+            await _categoryRepository.DeleteAsync(category);
             return RedirectToAction("Index", "Category");
         }
     }

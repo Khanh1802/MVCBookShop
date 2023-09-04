@@ -11,7 +11,7 @@
         @*Responsive grid (span 1-12 column).*@
         <div class="col-6 text-end">
             @*Change page*@
-            <a asp-controller="Product" asp-action="Create" class="=btn">
+            <a asp-controller="Product" asp-action="CreateOrUpdate" class="=btn">
                 <i class="bi bi-plus-circle"></i> Create Product
             </a>
         </div>
@@ -53,7 +53,7 @@
                         @*asp-route-id return id*@ @*mx-# Responsive left and right margin auto (horizontal) classes.
                     * can be sm, md, lg or xl. # can be a number between 0 and 5*@
                         @*asp-route-id return id  and id is name in method*@ @*pass id through a link below*@
-                        <a asp-controller="Product" asp-action="Update" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                        <a asp-controller="Product" asp-action="CreateOrUpdate" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
                             <i class="bi bi-pencil-square"></i> Update
                         </a>
 

@@ -13,16 +13,16 @@ namespace BookShopWeb.DataAccess.Repositories
             _context = context;
         }
 
-        public void Add(Category entity)
+        public async Task AddAsync(Category entity)
         {
-            _context.Categories.Add(entity);
-            _context.SaveChanges();
+            await _context.Categories.AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public void Delete(Category entity)
+        public async Task DeleteAsync(Category entity)
         {
             _context.Categories.Remove(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Category>> GetAllAsync()
@@ -40,10 +40,10 @@ namespace BookShopWeb.DataAccess.Repositories
             return Task.FromResult(_context.Categories.AsQueryable());
         }
 
-        public void Update(Category entity)
+        public async Task UpdateAsync(Category entity)
         {
             _context.Categories.Update(entity);
-            _context.SaveChanges ();
+            await _context.SaveChangesAsync();
         }
     }
 }
