@@ -39,8 +39,9 @@ namespace BookShopWeb.Models
         public double Price100 { get; set; }
         public Guid CategoryId { get; set; }
         [ForeignKey("CategoryId")]
-        [NotMapped]
+        [Required]
         public Category Category { get; set; }
+        [Required]
         public string ImageUrl { get; set; }
     }
 }

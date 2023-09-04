@@ -1,13 +1,15 @@
 ﻿@model Category
-<form method="post">
-    @*Margin Top Utilities*@
-    <div class="border p-3 mt-4">
-        @*Padding Bottom Utilities*@
-        <div class="row pb-2">
-            <h2 class="text-primary">Create Category</h2>
-            </hr>
-        </div>
+@*Margin Top Utilities*@
+<div class="border p-3 mt-4">
+    @*Padding Bottom Utilities*@
+    <div class="row pb-2">
+        <h2 class="text-primary">Create Category</h2>
+        </hr>
+    </div>
 
+</div>
+<div class="card-body p-4">
+    <form method="post" class="row">
         @*Responsive bottom margin classes. * can be sm, md, lg or xl. # can be a number between 0 and 5*@
         <div class="mb-3">
             <label> Category name</label>
@@ -31,5 +33,5 @@
                 </a>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>

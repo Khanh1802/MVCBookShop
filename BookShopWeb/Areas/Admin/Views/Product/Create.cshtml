@@ -1,66 +1,72 @@
-﻿@model Product
-<form method="post">
-    @*Margin Top Utilities*@
-    <div class="border p-3 mt-4">
-        @*Padding Bottom Utilities*@
-        <div class="row pb-2">
-            <h2 class="text-primary">Create Product</h2>
-            </hr>
-        </div>
-
+﻿@model ProductVM
+@*Margin Top Utilities*@
+<div class="border p-3 mt-4">
+    @*Padding Bottom Utilities*@
+    <div class="row pb-2">
+        <h2 class="text-primary">Create Product</h2>
+        </hr>
+    </div>
+</div>
+<div class="card-body p-4">
+    <form method="post" class="row" enctype="multipart/form-data">
         @*Responsive bottom margin classes. * can be sm, md, lg or xl. # can be a number between 0 and 5*@
         <div class="mb-3">
             <label> Product Title</label>
-            <input asp-for="Title" class="form-control"> @*full width*@
-            <span asp-validation-for="Title" class="text-danger"></span>
+            <input asp-for="Product.Title" class="form-control"> @*full width*@
+            <span asp-validation-for="Product.Title" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label> Product Description</label>
-            <input asp-for="Description" class="form-control"> @*full width*@
-            <span asp-validation-for="Description" class="text-danger"></span>
+            <input asp-for="Product.Description" class="form-control"> @*full width*@
+            <span asp-validation-for="Product.Description" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label> Product ISBN</label>
-            <input asp-for="ISBN" class="form-control"> @*full width*@
-            <span asp-validation-for="ISBN" class="text-danger"></span>
+            <input asp-for="Product.ISBN" class="form-control"> @*full width*@
+            <span asp-validation-for="Product.ISBN" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label> Product Author</label>
-            <input asp-for="Author" class="form-control"> @*full width*@
-            <span asp-validation-for="Author" class="text-danger"></span>
+            <input asp-for="Product.Author" class="form-control"> @*full width*@
+            <span asp-validation-for="Product.Author" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label> Product List Price</label>
-            <input asp-for="ListPrice" class="form-control"> @*full width*@
-            <span asp-validation-for="ListPrice" class="text-danger"></span>
+            <input asp-for="Product.ListPrice" class="form-control"> @*full width*@
+            <span asp-validation-for="Product.ListPrice" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label> Product Price 1-49</label>
-            <input asp-for="Price" class="form-control"> @*full width*@
-            <span asp-validation-for="Price" class="text-danger"></span>
+            <input asp-for="Product.Price" class="form-control"> @*full width*@
+            <span asp-validation-for="Product.Price" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label> Product Price 50-99</label>
-            <input asp-for="Price50" class="form-control"> @*full width*@
-            <span asp-validation-for="Price50" class="text-danger"></span>
+            <input asp-for="Product.Price50" class="form-control"> @*full width*@
+            <span asp-validation-for="Product.Price50" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <label> Product Price 100+</label>
-            <input asp-for="Price100" class="form-control"> @*full width*@
-            <span asp-validation-for="Price100" class="text-danger"></span>
+            <input asp-for="Product.Price100" class="form-control"> @*full width*@
+            <span asp-validation-for="Product.Price100" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label> Product Image Url</label>
+            <input type="file" class="form-control"> @*full width*@
         </div>
 
         <div class="mb-3">
             <label> Category Id</label>
             @*use asp-item show item in ViewBag value and "ViewBag to extract with Key"*@
-            <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select">
+            <select asp-for="Product.CategoryId" asp-items="@Model.Categories" class="form-select">
                 @*disable make select default with null value*@
                 <option disabled selected>--Select category--</option>
             </select> @*full width*@
@@ -77,5 +83,5 @@
                 </a>
             </div>
         </div>
-    </div>
-</form>
+    </form>
+</div>

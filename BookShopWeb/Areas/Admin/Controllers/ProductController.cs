@@ -1,4 +1,5 @@
 ﻿using BookShopWeb.DataAccess.Repositories;
+using BookShopWeb.DataAccess.ViewModels;
 using BookShopWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -26,27 +27,35 @@ namespace BookShopWeb.Areas.Admin.Controllers
 
         public async Task<IActionResult> Create()
         {
-            IEnumerable<SelectListItem> categories =
+            var productVM = new ProductVM()
+            {
+                Categories =
                 (await _categoryRepository.GetAllAsync())
                 .Select(x => new SelectListItem()
                 {
                     Text = x.Name,
                     Value = x.Id.ToString()
-                });
+                }),
+                Product = new Product()
+            };
+
             //Key is Categories and value is categories
-            ViewBag.Categories = categories;
-            return View();
+            //ViewBag.Categories = categories;
+            return View(productVM);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(ProductVM productVM)
         {
+            ModelState.Remove("Product.Category");
+            ModelState.Remove("Product.ImageUrl");
+            ModelState.Remove("Categories");
             if (ModelState.IsValid)
             {
-                _productRepository.Add(product);
+                _productRepository.Add(productVM.Product);
                 return RedirectToAction("Index", "Product");
             }
-            IEnumerable<SelectListItem> categories =
+            productVM.Categories =
                 (await _categoryRepository.GetAllAsync())
                 .Select(x => new SelectListItem()
                 {
@@ -54,8 +63,8 @@ namespace BookShopWeb.Areas.Admin.Controllers
                     Value = x.Id.ToString()
                 });
             //Key is Categories and value is categories
-            ViewBag.Categories = categories;
-            return View();
+            //ViewBag.Categories = categories;
+            return View(productVM);
         }
         public async Task<IActionResult> Update(Guid id)
         {
