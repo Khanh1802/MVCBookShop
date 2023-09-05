@@ -84,17 +84,18 @@ namespace BookShopWeb.Areas.Admin.Controllers
                     //navigate to the product path
                     //go inside product folder
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
-
+                    //Combine productPath and file name => stream pathn ultimate location
+                    string streamPath = Path.Combine(productPath, fileName);
                     //Save into product folder
                     using (var fileStream = new FileStream
-                        (/*ultimate location*/Path.Combine(productPath, fileName),
+                        (streamPath,
                         /*Bc create new file so =>*/FileMode.Create))
                     {
                         //Copies the contents of the uploaded file to the target stream.
                         file.CopyTo(fileStream);
                     }
 
-                    productVM.Product.ImageUrl = @"\images\product\" + fileName;
+                    productVM.Product.ImageUrl = $@"\images\product\{fileName}";
                 }
                 //Create
                 if (productVM.Product.Id == null || productVM.Product.Id == Guid.Empty)
