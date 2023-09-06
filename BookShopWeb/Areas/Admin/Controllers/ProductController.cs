@@ -3,6 +3,7 @@ using BookShopWeb.DataAccess.ViewModels;
 using BookShopWeb.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookShopWeb.Areas.Admin.Controllers
 {
@@ -24,7 +25,8 @@ namespace BookShopWeb.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var products = await _productRepository.GetAllAsync();
+            var products = await (await _productRepository.GetQueryableAsync())
+                .Include(x => x.Category).ToListAsync();
             return View(products);
         }
 
@@ -86,6 +88,17 @@ namespace BookShopWeb.Areas.Admin.Controllers
                     string productPath = Path.Combine(wwwRootPath, @"images\product");
                     //Combine productPath and file name => stream pathn ultimate location
                     string streamPath = Path.Combine(productPath, fileName);
+
+                    //update image if image old was exist
+                    if(!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    {
+                        string oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
                     //Save into product folder
                     using (var fileStream = new FileStream
                         (streamPath,

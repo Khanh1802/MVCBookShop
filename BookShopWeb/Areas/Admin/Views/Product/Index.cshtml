@@ -33,10 +33,10 @@
                     Author
                 </th>
                 <th>
-                    Price  
+                    Price
                 </th>
                 <th>
-                    Category  
+                    Category
                 </th>
             </tr>
         </thead>
@@ -46,13 +46,16 @@
                 <td>@obj.Title</td>
                 <td>@obj.ISBN</td>
                 <td>@obj.Author</td>
-                <td>@obj.Price</td> 
+                <td>@obj.Price</td>
+                <td>
+                    @obj.Category.Name
+                <td>
                 <td></td>
                 <td>
                     <div class="btn-group">
-                        @*asp-route-id return id*@ @*mx-# Responsive left and right margin auto (horizontal) classes.
+                                @*asp-route-id return id*@ @*mx-# Responsive left and right margin auto (horizontal) classes.
                     * can be sm, md, lg or xl. # can be a number between 0 and 5*@
-                        @*asp-route-id return id  and id is name in method*@ @*pass id through a link below*@
+                                @*asp-route-id return id  and id is name in method*@ @*pass id through a link below*@
                         <a asp-controller="Product" asp-action="CreateOrUpdate" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
                             <i class="bi bi-pencil-square"></i> Update
                         </a>
