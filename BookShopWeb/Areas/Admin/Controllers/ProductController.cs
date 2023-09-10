@@ -90,7 +90,7 @@ namespace BookShopWeb.Areas.Admin.Controllers
                     string streamPath = Path.Combine(productPath, fileName);
 
                     //update image if image old was exist
-                    if(!string.IsNullOrEmpty(productVM.Product.ImageUrl))
+                    if (!string.IsNullOrEmpty(productVM.Product.ImageUrl))
                     {
                         string oldImagePath = Path.Combine(wwwRootPath, productVM.Product.ImageUrl.TrimStart('\\'));
                         if (System.IO.File.Exists(oldImagePath))
@@ -133,25 +133,38 @@ namespace BookShopWeb.Areas.Admin.Controllers
             return View(productVM);
         }
 
+      
+        #region Call API
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var products = await (await _productRepository.GetQueryableAsync())
+                .Include(x => x.Category).ToListAsync();
+            return Json(new { data = products });
+        }
+
+        [HttpDelete]
         public async Task<IActionResult> Delete(Guid id)
         {
             if (id == null || id == Guid.Empty)
             {
-                return NotFound();
+                return Json(new {success = false,message = "Error not found product"});
             }
             var product = await _productRepository.GetByIdAsync(id);
-            if (product == null)
+            if (!string.IsNullOrEmpty(product.ImageUrl))
             {
-                return NotFound();
+                string wwwRootPath = _webHostEnvironment.EnvironmentName;
+                string oldImagePath = Path.Combine(wwwRootPath, product.ImageUrl.TrimStart('\\'));
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
             }
-            return View(product);
+            await _productRepository.DeleteAsync(product);
+            return Json(new { success = true, message = "Delete successful" });
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Delete(Product product)
-        {
-            await _productRepository.DeleteAsync(product);
-            return RedirectToAction("Index", "Product");
-        }
+        #endregion
     }
 }
